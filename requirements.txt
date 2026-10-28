@@ -1,0 +1,7 @@
+numpy
+openpyxl
+pandas
+pulp
+requests
+scikit-learn
+streamlit
