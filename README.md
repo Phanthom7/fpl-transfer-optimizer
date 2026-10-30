@@ -25,7 +25,7 @@ live FPL API + model -> generate_predictions.py -> artifacts/predictions.csv
 artifacts/predictions.csv -> serve_app.py (Streamlit)
 ```
 
-## Setup (not run during cleanup)
+## Setup
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
@@ -47,9 +47,7 @@ streamlit run serve_app.py
 | `team2026.py` | Scratch script: fetches one team's picks for a hardcoded entry id and gameweek |
 | `fpl.ipynb`, `df.ipynb` | Notebooks; `fpl.ipynb` is the feature-engineering source of truth per the original README |
 | `*.csv` | Historical and prediction data (~53 MB total) |
-| `Chess/`, `Job Scraper/` | Empty folders carried over from the original. Likely leftovers (inferred) |
 
-## Not in this copy
+## Notes
 
-- `.venv/` (215 MB) and `__pycache__/`: recreate with the setup steps above.
-- `artifacts/` never existed in the original, so the app needs the pipeline run first.
+- `artifacts/` is gitignored. Run the pipeline once before launching the app.

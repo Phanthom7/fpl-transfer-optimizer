@@ -5,3 +5,7 @@ artifacts/
 streamlit/
 .DS_Store
 .env
+
+# local notes
+AGENTS.md
+PROJECT.md
