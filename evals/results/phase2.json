@@ -1,7 +1,7 @@
 {
   "phase": 2,
   "gate": "OPEN",
-  "run_at": "2026-11-07T21:46:05.969637+00:00",
+  "run_at": "2026-11-07T22:08:58.488502+00:00",
   "checks": [
     {
       "phase": 2,
@@ -35,11 +35,31 @@
     },
     {
       "phase": 2,
+      "check": "role + tenure use only earlier matches (truncate-and-recompute, 200 rows)",
+      "tier": "CRITICAL",
+      "value": "200/200",
+      "threshold": "200/200",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 2,
       "check": "98%+ returning players matched across seasons",
       "tier": "PASS",
       "value": 1.0,
       "threshold": ">= 0.98",
       "note": "3443/3443",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 2,
+      "check": "role, role_season, status_detail populated with valid labels",
+      "tier": "PASS",
+      "value": "bad_role=0 bad_role_season=0 bad_detail=0 inconsistent=0",
+      "threshold": "all 0",
+      "note": "",
       "ok": true,
       "status": "PASS"
     },
@@ -59,6 +79,16 @@
       "tier": "GOOD",
       "value": "10/10",
       "threshold": "10/10",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 2,
+      "check": "Mean points: starter > substitute > benchwarmer (every season)",
+      "tier": "GOOD",
+      "value": "starter=2.76 sub=1.40 bench=0.18",
+      "threshold": "strict order all seasons",
       "note": "",
       "ok": true,
       "status": "PASS"

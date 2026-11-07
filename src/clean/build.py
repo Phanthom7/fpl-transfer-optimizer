@@ -9,6 +9,7 @@ import logging
 import numpy as np
 import pandas as pd
 
+from src.clean import roles
 from src.config import AUX_SEASONS, HIST_SEASONS, INTERIM_DIR, LIVE_SEASON, RAW_DIR
 
 log = logging.getLogger(__name__)
@@ -29,7 +30,9 @@ OUT_COLS = [
     "team", "team_code", "opponent_team", "opponent_code", "position",
     "first_name", "second_name", "web_name", "price", *STATS,
     "is_ghost_fixture", "n_team_fixtures_gw", "is_dgw",
-    "player_status", "promoted_team", "mid_season_move", "position_changed",
+    "player_status", "status_detail", "promoted_team", "mid_season_move", "position_changed",
+    "appearance", "role", "starts_last5", "apps_last5", "role_season",
+    "gws_at_club", "apps_at_club", "days_at_club", "club_tenure_censored",
 ]
 
 
@@ -190,7 +193,22 @@ def build() -> pd.DataFrame:
     prev_of = dict(zip(seasons[1:], seasons[:-1]))
     df["promoted_team"] = [tc not in team_codes[prev_of[s]] for s, tc in zip(df["season"], df["team_code"].astype(int))]
 
-    df = classify_status(df, seasons, season_player_teams())
+    registered = season_player_teams()
+    df = classify_status(df, seasons, registered)
+    df = roles.add_roles(df)
+    df = roles.add_tenure_censoring(df, HIST_SEASONS[0], registered[AUX_SEASONS[-1]])
+    # seasons in which each player actually played PL minutes (2018-19 from season totals)
+    played = {s: set(pd.read_parquet(VAASTAV / s / "players_raw.parquet", columns=["code", "minutes"])
+                     .query("minutes > 0")["code"].astype(int)) for s in AUX_SEASONS}
+    real = df[~df["is_ghost_fixture"].astype(bool) & (df["minutes"] > 0)]
+    for s, g in real.groupby("season"):
+        played[s] = set(g["player_id"].astype(int))
+    seen = {}
+    for i, s in enumerate(seasons):
+        earlier = set().union(*(played.get(x, set()) for x in seasons[:max(i - 1, 0)]))
+        for p in df.loc[df["season"] == s, "player_id"].unique():
+            seen[(p, s)] = int(p) in earlier
+    df = roles.add_status_detail(df, seen)
     df["gw"] = df["gw"].astype(int)
     df = df[OUT_COLS].sort_values(["season", "gw", "kickoff_time", "player_id"]).reset_index(drop=True)
     return df

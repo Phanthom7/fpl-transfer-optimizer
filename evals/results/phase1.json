@@ -1,7 +1,7 @@
 {
   "phase": 1,
   "gate": "OPEN",
-  "run_at": "2026-11-07T21:46:05.968727+00:00",
+  "run_at": "2026-11-07T22:08:58.487800+00:00",
   "checks": [
     {
       "phase": 1,
@@ -57,7 +57,7 @@
       "phase": 1,
       "check": "Rate limit (>=1 s/host) + disk cache in place",
       "tier": "CRITICAL",
-      "value": "delay_cfg=1.0s two_calls=1.72s cache_hit=True",
+      "value": "delay_cfg=1.0s two_calls=1.64s cache_hit=True",
       "threshold": ">= 1.0 s, cache hit",
       "note": "",
       "ok": true,

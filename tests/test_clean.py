@@ -55,3 +55,35 @@ def test_status_classification():
     assert out.loc[2, "player_status"] == "moved_pl_club" and out.loc[2, "mid_season_move"]
     assert out.loc[3, "player_status"] == "new_to_pl"
     assert out.loc[4, "position_changed"]
+
+
+from src.clean import roles
+
+
+def _player(minutes, starts=None, teams=None, season="2023-24"):
+    n = len(minutes)
+    return pd.DataFrame({
+        "player_id": 1, "season": season, "gw": range(1, n + 1), "fixture": range(1, n + 1),
+        "kickoff_time": [f"2023-08-{i + 10:02d}T15:00:00Z" for i in range(n)],
+        "minutes": minutes, "starts": starts if starts is not None else [None] * n,
+        "team_code": teams or [5] * n, "is_ghost_fixture": False,
+    })
+
+
+def test_appearance_rule():
+    df = _player([90, 70, 25, 0], starts=[1, None, 0, 0])
+    assert roles.appearance(df).tolist() == ["started", "started", "sub_on", "unused"]
+
+
+def test_role_uses_only_previous_matches():
+    df = roles.add_roles(_player([90, 90, 90, 0, 0, 0, 0, 0]))
+    assert df["role"].tolist()[0] == "unknown"          # no history
+    assert df["role"].tolist()[3] == "starter"          # 3/3 previous starts; current 0 min ignored
+    assert df["role"].tolist()[7] == "benchwarmer"      # previous 5 = 90,0,0,0,0 -> 1/5 starts
+    assert df["starts_last5"].tolist()[3] == 3
+
+
+def test_tenure_resets_on_move_and_counts_prior_only():
+    df = roles.add_roles(_player([90, 0, 90, 90], teams=[5, 5, 7, 7]))
+    assert df["gws_at_club"].tolist() == [0, 1, 0, 1]
+    assert df["apps_at_club"].tolist() == [0, 1, 0, 1]

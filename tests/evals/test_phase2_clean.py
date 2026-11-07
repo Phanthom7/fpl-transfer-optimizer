@@ -151,3 +151,50 @@ def test_spot_check_known_players(pg, ev):
             if got != [pr]:
                 fails.append(f"{tokens[1]} {s}: promoted {got} != {pr}")
     ev.check(not fails, f"{len(KNOWN) - len({f.split()[0].rstrip(':') for f in fails})}/{len(KNOWN)}", "10/10", "; ".join(fails))
+
+
+# ---- Added after user review: role / tenure / status_detail (pending approval) ----
+from src.clean import roles as _roles
+
+ROLE_SET = {"starter", "substitute", "benchwarmer", "unknown"}
+DETAIL_SET = {"returning", "moved_pl_club", "returned_to_pl", "new_promoted_club", "new_signing", "new_fringe"}
+
+
+@pytest.mark.critical
+def test_role_tenure_leak_free(pg, ev):
+    """role + tenure use only earlier matches (truncate-and-recompute, 200 rows)"""
+    cols = ["role", "starts_last5", "apps_last5", "gws_at_club", "apps_at_club", "days_at_club"]
+    real = pg[~pg["is_ghost_fixture"].astype(bool)]
+    sample = real.sample(200, random_state=7)
+    bad = 0
+    for _, row in sample.iterrows():
+        hist = real[(real["player_id"] == row["player_id"]) & (real["kickoff_time"] <= row["kickoff_time"])].copy()
+        # wipe the target row's own outcome: recomputed features must not change
+        mask = (hist["kickoff_time"] == row["kickoff_time"]) & (hist["fixture"] == row["fixture"])
+        hist.loc[mask, ["minutes", "starts"]] = [0, 0]
+        re = _roles.add_roles(hist.drop(columns=cols + ["appearance", "role_season"]))
+        got = re.loc[(re["fixture"] == row["fixture"]) & (re["kickoff_time"] == row["kickoff_time"]), cols].iloc[0]
+        bad += int(any(str(got[c]) != str(row[c]) for c in cols))
+    ev.check(bad == 0, f"{200 - bad}/200", "200/200")
+
+
+@pytest.mark.pass_gate
+def test_role_and_detail_valid(pg, ev):
+    """role, role_season, status_detail populated with valid labels"""
+    real = pg[~pg["is_ghost_fixture"].astype(bool)]
+    bad_role = int((~real["role"].isin(ROLE_SET)).sum())
+    bad_season = int((~real["role_season"].isin(ROLE_SET - {"unknown"})).sum())
+    bad_detail = int((~real["status_detail"].isin(DETAIL_SET)).sum())
+    consistent = int(((real["player_status"] == "new_to_pl") != real["status_detail"].isin(
+        {"returned_to_pl", "new_promoted_club", "new_signing", "new_fringe"})).sum())
+    ev.check(bad_role + bad_season + bad_detail + consistent == 0,
+             f"bad_role={bad_role} bad_role_season={bad_season} bad_detail={bad_detail} inconsistent={consistent}", "all 0")
+
+
+@pytest.mark.good
+def test_role_separates_points(pg, ev):
+    """Mean points: starter > substitute > benchwarmer (every season)"""
+    real = pg[~pg["is_ghost_fixture"].astype(bool) & (pg["position"] != "AM")]
+    m = real.groupby(["season", "role"])["total_points"].mean().unstack()
+    ok = ((m["starter"] > m["substitute"]) & (m["substitute"] > m["benchwarmer"])).all()
+    ev.check(bool(ok), f"starter={m['starter'].mean():.2f} sub={m['substitute'].mean():.2f} bench={m['benchwarmer'].mean():.2f}", "strict order all seasons")

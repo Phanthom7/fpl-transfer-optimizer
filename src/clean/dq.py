@@ -14,10 +14,11 @@ def report(df: pd.DataFrame) -> dict:
     per = real.groupby("season").agg(rows=("player_id", "size"), players=("player_id", "nunique"),
                                      gws=("gw", "nunique"), dgw_rows=("is_dgw", "sum"),
                                      minutes_gt0=("minutes", lambda m: int((m > 0).sum())))
-    status = ps.pivot_table(index="season", columns="player_status", values="player_id", aggfunc="count", fill_value=0)
+    status = ps.pivot_table(index="season", columns="status_detail", values="player_id", aggfunc="count", fill_value=0)
+    role_s = ps.pivot_table(index="season", columns="role_season", values="player_id", aggfunc="count", fill_value=0).add_prefix("season_")
     flags = ps.groupby("season")[["mid_season_move", "position_changed"]].sum()
     promoted = real.drop_duplicates(["season", "team"]).groupby("season")["promoted_team"].sum().rename("promoted_teams")
-    table = per.join(status).join(flags).join(promoted).reset_index()
+    table = per.join(status).join(role_s).join(flags).join(promoted).reset_index()
     nulls = df.isna().sum()
     return {
         "rows": len(df),

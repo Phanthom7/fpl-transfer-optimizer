@@ -33,7 +33,7 @@ Every phase passes its gate before the next starts.
 | xG/xA non-null coverage in seasons where source has it (2022-23+, live) | GOOD | >= 0.90 |
 | Data source choice justified in DECISIONS.md | GOOD | row + reason > 40 chars |
 
-## Phase 2: Clean (`tests/evals/test_phase2_clean.py`) DRAFT, awaiting approval
+## Phase 2: Clean (`tests/evals/test_phase2_clean.py`)
 
 Contract: `data/interim/player_gw.parquet`, one row per (player_id, season, gw, fixture) with season, gw, player_id, code, element, fixture, team, opponent_team, position, total_points, minutes, first_name, second_name, web_name, player_status (returning / moved_pl_club / new_to_pl), promoted_team.
 
@@ -44,6 +44,9 @@ Contract: `data/interim/player_gw.parquet`, one row per (player_id, season, gw, 
 | Points per (season, element, GW) reconcile to raw (exact duplicate raw rows dropped; live = finished GWs) | CRITICAL | 100% |
 | Returning players (same `code` in consecutive seasons) share one player_id | PASS | >= 98% |
 | Same, stretch target | GOOD | >= 99.5% |
+| role + tenure columns leak-free: truncate-and-recompute 200 random rows (target row outcome wiped) *(added, pending approval)* | CRITICAL | 200/200 |
+| role, role_season, status_detail valid labels; status_detail consistent with player_status *(added, pending approval)* | PASS | 0 bad |
+| Mean points starter > substitute > benchwarmer, every season *(added, pending approval)* | GOOD | strict order |
 | 10 known players spot-checked: Salah, Rice (mover), Haaland (new), Havertz (mover), Palmer (mover), Ødegaard (accent), B. Fernandes, Son (raw name order flips), Mitrović (gap season + promoted), Gyökeres (new, accent) | GOOD | 10/10 |
 
 ## Phases 3 to 6: PROPOSED (tests written at start of each phase, after approval)

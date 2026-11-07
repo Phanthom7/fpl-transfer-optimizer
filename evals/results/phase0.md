@@ -1,7 +1,7 @@
 # Phase 0 scorecard
 
 Gate: **OPEN**  
-Run: 2026-11-07T21:46:05.967702+00:00
+Run: 2026-11-07T22:08:58.486519+00:00
 
 | check | tier | value | threshold | status | note |
 |---|---|---|---|---|---|
