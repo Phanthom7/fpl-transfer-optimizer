@@ -36,6 +36,14 @@ python generate_predictions.py
 streamlit run serve_app.py
 ```
 
+### SQL sandbox
+
+```bash
+streamlit run sql_sandbox.py
+```
+
+Loads every CSV in the repo root (and `artifacts/`) into a read-only in-memory SQLite database, one table per file (`fpl_2024:25.csv` becomes `fpl_2024_25`). The sidebar lists tables and columns, and results can be downloaded as CSV.
+
 ## Files
 
 | Path | What it is |
@@ -43,6 +51,7 @@ streamlit run serve_app.py
 | `feature_engineering.py`, `train_model.py`, `generate_predictions.py`, `serve_app.py` | The 4 pipeline stages |
 | `ml_pipeline.py` | Shared paths (`artifacts/`), feature helpers, model save/load |
 | `fpl_engine.py` | Squad fetch, prediction merge, transfer optimization (490 lines) |
+| `sql_sandbox.py` | Streamlit SQL sandbox over the CSV tables |
 | `lasso_feature_analysis.py` | LassoCV coefficient ranking |
 | `team2026.py` | Scratch script: fetches one team's picks for a hardcoded entry id and gameweek |
 | `fpl.ipynb`, `df.ipynb` | Notebooks; `fpl.ipynb` is the feature-engineering source of truth per the original README |
