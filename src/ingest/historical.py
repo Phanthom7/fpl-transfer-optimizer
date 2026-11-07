@@ -5,7 +5,7 @@ import json
 import logging
 from datetime import datetime, timezone
 
-from src.config import ALL_SEASONS, LIVE_SEASON, RAW_DIR, VAASTAV_BASE
+from src.config import ALL_SEASONS, AUX_SEASONS, LIVE_SEASON, RAW_DIR, VAASTAV_BASE
 from src.ingest.http import FetchError, fetch_bytes
 from src.ingest.gw import normalize_gw
 from src.ingest.io import read_csv_bytes, to_parquet_safe
@@ -24,7 +24,7 @@ LIVE_TTL_S = 6 * 3600
 OUT = RAW_DIR / "vaastav"
 
 
-def ingest_season(season: str, force: bool = False) -> dict:
+def ingest_season(season: str, force: bool = False, only: list[str] | None = None) -> dict:
     live = season == LIVE_SEASON
     out_dir = OUT / season
     manifest_path = out_dir / "_manifest.json"
@@ -35,6 +35,8 @@ def ingest_season(season: str, force: bool = False) -> dict:
     manifest = {"season": season, "source": VAASTAV_BASE, "files": {},
                 "ingested_at": datetime.now(timezone.utc).isoformat()}
     for name, (rel, required) in FILES.items():
+        if only and name not in only:
+            continue
         url = f"{VAASTAV_BASE}/{season}/{rel}"
         try:
             raw = fetch_bytes(url, ttl_s=LIVE_TTL_S if live else None)
@@ -61,6 +63,11 @@ def ingest_season(season: str, force: bool = False) -> dict:
 
 def ingest_all(seasons=ALL_SEASONS, force: bool = False) -> list[dict]:
     return [ingest_season(s, force=force) for s in seasons]
+
+
+def ingest_aux(force: bool = False) -> None:
+    for s in AUX_SEASONS:
+        ingest_season(s, force=force, only=["players_raw"])
 
 
 def ingest_master_team_list(force: bool = False) -> None:

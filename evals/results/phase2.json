@@ -1,67 +1,67 @@
 {
   "phase": 2,
-  "gate": "BLOCKED",
-  "run_at": "2026-11-07T21:34:46.527783+00:00",
+  "gate": "OPEN",
+  "run_at": "2026-11-07T21:46:05.969637+00:00",
   "checks": [
     {
       "phase": 2,
       "check": "Zero duplicate (player, season, GW, fixture) keys",
       "tier": "CRITICAL",
-      "value": null,
-      "threshold": null,
-      "note": "tests/evals/test_phase2_clean.py:20: AssertionError",
-      "ok": null,
-      "status": "FAIL"
+      "value": 0,
+      "threshold": "0",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
     },
     {
       "phase": 2,
       "check": "Zero nulls in points, minutes, team, position",
       "tier": "CRITICAL",
-      "value": null,
-      "threshold": null,
-      "note": "tests/evals/test_phase2_clean.py:20: AssertionError",
-      "ok": null,
-      "status": "FAIL"
+      "value": "{'total_points': 0, 'minutes': 0, 'team': 0, 'position': 0}",
+      "threshold": "all 0 (-1 = column missing)",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
     },
     {
       "phase": 2,
       "check": "Points per GW reconcile 100% to raw",
       "tier": "CRITICAL",
-      "value": null,
-      "threshold": null,
-      "note": "tests/evals/test_phase2_clean.py:20: AssertionError",
-      "ok": null,
-      "status": "FAIL"
+      "value": 1.0,
+      "threshold": "1.0",
+      "note": "raw_only=0 pg_only=0 mismatch=0",
+      "ok": true,
+      "status": "PASS"
     },
     {
       "phase": 2,
       "check": "98%+ returning players matched across seasons",
       "tier": "PASS",
-      "value": null,
-      "threshold": null,
-      "note": "tests/evals/test_phase2_clean.py:20: AssertionError",
-      "ok": null,
-      "status": "FAIL"
+      "value": 1.0,
+      "threshold": ">= 0.98",
+      "note": "3443/3443",
+      "ok": true,
+      "status": "PASS"
     },
     {
       "phase": 2,
       "check": "99.5%+ returning players matched across seasons",
       "tier": "GOOD",
-      "value": null,
-      "threshold": null,
-      "note": "tests/evals/test_phase2_clean.py:20: AssertionError",
-      "ok": null,
-      "status": "FAIL"
+      "value": 1.0,
+      "threshold": ">= 0.995",
+      "note": "3443/3443",
+      "ok": true,
+      "status": "PASS"
     },
     {
       "phase": 2,
       "check": "10 known players spot-checked (club movers, new signings, name swap, gap season)",
       "tier": "GOOD",
-      "value": null,
-      "threshold": null,
-      "note": "tests/evals/test_phase2_clean.py:20: AssertionError",
-      "ok": null,
-      "status": "FAIL"
+      "value": "10/10",
+      "threshold": "10/10",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
     }
   ]
 }

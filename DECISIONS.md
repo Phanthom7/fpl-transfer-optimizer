@@ -28,3 +28,13 @@ Assumption log. Newest at bottom.
 | 22 | 2026-11-07 | E | 2019-20 GW39-47 mapped to 30-38 at ingest in new column `gw`; raw `GW` kept | Raw stays raw |
 | 23 | 2026-11-07 | E | Player count plausibility range 550-950 per season; outliers flagged at abs(z) > 1.5 | No threshold given; set from FPL norms (600-870) |
 | 24 | 2026-11-07 | E | Phase 2 reconcile drops exact duplicate raw rows first (2025-26 has 10). Not-exact (element, fixture) dupes in 2019-20 (59) must be resolved by Phase 2 code | Duplicate source rows are not real points |
+| 25 | 2026-11-07 | 2 | player_id = FPL player `code`; team identity = FPL team `code`; canonical team name = latest season's name (e.g. "Ipswich Town") | Both codes stable across seasons; names change |
+| 26 | 2026-11-07 | 2 | Row team derived from fixture (team_h/team_a + was_home), validated against opponent_team | Exact for mid-season movers; players_raw only has end-of-season team |
+| 27 | 2026-11-07 | 2 | 2019-20: 59 rows for Arsenal v Man City listed under GW29 (postponed, 0 min, 0 pts) kept with `is_ghost_fixture=True`; real match at GW30 (raw 39). Downstream excludes ghost rows | Keeps 1:1 reconcile with raw; flag removes them from features |
+| 28 | 2026-11-07 | 2 | 2024-25 Assistant Manager rows (position AM, 322 rows) kept with position "AM"; excluded from model/optimizer | Real raw rows with points, not players |
+| 29 | 2026-11-07 | 2 | "GKP" normalised to "GK" | Label drift in 2021-22 |
+| 30 | 2026-11-07 | 2 | player_status per season: new_to_pl = not in previous season's FPL player list; else returning if main club (most GW rows) = previous season's last club, else moved_pl_club. Season descriptor (uses full season), NOT a model feature; Phase 3 builds leak-free row-level equivalents | Palmer 2023-24 played GW1-3 for City; first-club rule mislabelled him |
+| 31 | 2026-11-07 | 2 | 2018-19 players_raw ingested (aux) for 2019-20 status + promoted flags | Need previous season |
+| 32 | 2026-11-07 | 2 | promoted_team = team code absent from previous season's team list | Simple, exact |
+| 33 | 2026-11-07 | 2 | Live season: only finished GWs (1-9) in player_gw. Missing minutes: none found (0 nulls); no imputation done | GW10 in progress |
+| 34 | 2026-11-07 | 2 | Price = value / 10 per row (price changes kept per GW). xG/defensive stats NaN where source lacks them (pre-2022, pre-2025); xP NaN for 2019-20 and live | Model handles NaN; no fake zeros |

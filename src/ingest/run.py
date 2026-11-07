@@ -6,7 +6,7 @@ import logging
 
 from src.config import ALL_SEASONS
 from src.ingest.fpl_api import ingest_live_api
-from src.ingest.historical import ingest_all, ingest_master_team_list
+from src.ingest.historical import ingest_all, ingest_aux, ingest_master_team_list
 
 
 def main(argv=None) -> None:
@@ -19,6 +19,7 @@ def main(argv=None) -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 
     ingest_master_team_list(force=a.force)
+    ingest_aux(force=a.force)
     ingest_all(a.seasons, force=a.force)
     if not a.no_api:
         ingest_live_api(element_summaries=a.element_summaries)

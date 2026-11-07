@@ -17,6 +17,7 @@ HTTP_CACHE_DIR = RAW_DIR / "_http_cache"
 
 HIST_SEASONS = ["2019-20", "2020-21", "2021-22", "2022-23", "2023-24", "2024-25", "2025-26"]
 LIVE_SEASON = "2026-27"
+AUX_SEASONS = ["2018-19"]  # player list only, for 2019-20 status flags
 ALL_SEASONS = HIST_SEASONS + [LIVE_SEASON]
 
 VAASTAV_BASE = "https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data"
