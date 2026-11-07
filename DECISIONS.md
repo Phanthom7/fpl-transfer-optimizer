@@ -12,3 +12,4 @@ Assumption log. Newest at bottom.
 | 6 | 2026-11-07 | 0 | Live fallback: vaastav 2026-27 mirror when FPL API unreachable | API blocked in this sandbox (403) |
 | 7 | 2026-11-07 | 0 | Model: LightGBM per horizon; DL only if beats GBM on test | Tabular data, small budget |
 | 8 | 2026-11-07 | 0 | Storage: parquet (pyarrow) | Fast, typed, UTF-8 safe |
+| 9 | 2026-11-07 | 0 | Current GW = 10 (2026-27), per user. Team ID deferred to model testing | User input |
