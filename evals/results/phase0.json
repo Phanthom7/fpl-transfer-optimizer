@@ -1,0 +1,47 @@
+{
+  "phase": 0,
+  "gate": "OPEN",
+  "run_at": "2026-11-07T21:34:46.526344+00:00",
+  "checks": [
+    {
+      "phase": 0,
+      "check": "Audit table covers 100% of repo files",
+      "tier": "CRITICAL",
+      "value": "22/22",
+      "threshold": "100%",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 0,
+      "check": "Zero deletions vs pre-rebuild repo (archive moves only)",
+      "tier": "CRITICAL",
+      "value": "deleted=0 lost_blobs=0",
+      "threshold": "0",
+      "note": "[] []",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 0,
+      "check": "PLAN.md must-have hours fit 2-day budget",
+      "tier": "PASS",
+      "value": "12.0 h (Must hrs)",
+      "threshold": "<= 12.0 h",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 0,
+      "check": "Must-have vs stretch clearly split",
+      "tier": "GOOD",
+      "value": "cols=True every_phase_has_must=True priority_list=True",
+      "threshold": "all true",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    }
+  ]
+}

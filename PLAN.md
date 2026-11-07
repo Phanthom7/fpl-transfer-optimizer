@@ -24,22 +24,25 @@ refresh.py runs the whole chain.
 
 ## Phases
 
-| # | Phase | Hrs | Must-have | Stretch |
-|---|---|---|---|---|
-| 0 | Audit + plan | 0.5 | archive, PLAN, DECISIONS | |
-| 1 | Ingest | 1.5 | 7 seasons hist + live 2026/27, parquet, cache, idempotent | FPL API element-summary per player; xG scraping (Understat/FBref) |
-| 2 | Clean | 2.0 | one player-GW table, cross-season ID map, DGW/BGW, 2019/20 GW fix, status flags, DQ report | position-change audit detail |
-| 3 | Features | 2.5 | rolling 3/5/10, fixture/FDR, team form, minutes risk, cold-start priors, games_played_in_PL | high-scoring fixture flag, prior-league stats scaled by league factor |
-| 4 | Model | 2.0 | baselines (rolling avg, FPL xP), LightGBM 1/3/5 GW, metrics by segment, importance chart, live scoring | LSTM/transformer (ship only if beats GBM) |
-| 5 | Recommender | 2.0 | ILP squad build, transfers w/ hits, captain top 5, XI + bench, BB/FH timing | backtest vs baseline on test season |
-| 6 | App + refresh | 2.0 | styled Streamlit, tabs, team ID input, `make refresh`, README | charts polish, dark theme toggle |
-| | **Total** | **12.5** | | |
+| # | Phase | Must hrs | Stretch hrs | Must-have | Stretch |
+|---|---|---|---|---|---|
+| 0 | Audit + plan | 0.5 | 0 | archive, PLAN, DECISIONS, AUDIT | |
+| 1 | Ingest | 1.5 | 0.5 | 7 seasons hist + live 2026/27, parquet, cache, idempotent | xG scraping (Understat/FBref) |
+| E | Eval gates | 1.0 | 0 | eval suite, scorecards, retro-evals P0/P1, P2 draft | |
+| 2 | Clean | 2.0 | 0 | one player-GW table, cross-season ID map, DGW/BGW, 2019/20 GW fix, status flags, DQ report | |
+| 3 | Features | 2.0 | 1.0 | rolling 3/5/10, fixture/FDR, team form, minutes risk, cold-start priors, games_played_in_PL | high-scoring fixture flag, prior-league stats scaled by league factor |
+| 4 | Model | 1.5 | 2.0 | baselines (rolling avg, FPL xP), LightGBM 1/3/5 GW, metrics by segment, importance chart, live scoring | LSTM/transformer (ship only if beats GBM) |
+| 5 | Recommender | 1.75 | 1.0 | ILP squad build, transfers w/ hits, captain top 5, XI + bench, BB/FH timing | backtest vs baseline on test season |
+| 6 | App + refresh | 1.75 | 0.5 | styled Streamlit, tabs, team ID input, `make refresh`, README | chart polish, theme toggle |
+| | **Total** | **12.0** | **5.0** | | |
+
+Budget: 2 days x 6 h = 12 h floor. Must-have fits exactly; stretch only from time beyond 12 h or time saved.
 
 ## Day schedule (working app guaranteed by end of Day 2)
 
 | Block | Work |
 |---|---|
-| Day 1 AM | P0, P1 |
+| Day 1 AM | P0, P1, eval gates |
 | Day 1 PM | P2, P3 (core features first, cold start second) |
 | Day 2 AM | P4: 1 GW LightGBM first, then 3/5 GW. Score live. |
 | Day 2 midday | P5: squad build + transfers + captain/XI (must), chips next |

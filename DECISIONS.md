@@ -22,3 +22,9 @@ Assumption log. Newest at bottom.
 | 16 | 2026-11-07 | 1 | GW10 is in progress (not finished). Only finished GWs used for features/training. Next decision GW = 11 | Partial GW stats would leak/understate |
 | 17 | 2026-11-07 | 1 | Understat/FBref scraping not done: hosts blocked and ToS restrictive. xG = FPL `expected_goals` (2022-23+) + vaastav understat season totals (2019-20..2024-25) | Avoid scraping; good enough coverage |
 | 18 | 2026-11-07 | 1 | Prior-league stats for new signings: no reachable, ToS-safe source. Cold start uses priors (position x price x team) only. Stretch | Data unavailable |
+| 19 | 2026-11-07 | E | Eval gate = all CRITICAL + PASS checks pass. GOOD misses = WARN, logged, non-blocking | Tier semantics |
+| 20 | 2026-11-07 | E | Phase 0 budget check: must-have hours <= 12 h (2 days x 6 h floor of '6+ hrs/day'). PLAN revised: split Must/Stretch hrs, added eval row (was 12.5 h mixed) | Retro-eval failed at 12.5 h |
+| 21 | 2026-11-07 | E | 'Every GW present' = every GW with scheduled fixtures in fixtures.csv. 2022-23 GW7 fully postponed (Queen's death), so absent by design | Real blank GW, not missing data |
+| 22 | 2026-11-07 | E | 2019-20 GW39-47 mapped to 30-38 at ingest in new column `gw`; raw `GW` kept | Raw stays raw |
+| 23 | 2026-11-07 | E | Player count plausibility range 550-950 per season; outliers flagged at abs(z) > 1.5 | No threshold given; set from FPL norms (600-870) |
+| 24 | 2026-11-07 | E | Phase 2 reconcile drops exact duplicate raw rows first (2025-26 has 10). Not-exact (element, fixture) dupes in 2019-20 (59) must be resolved by Phase 2 code | Duplicate source rows are not real points |

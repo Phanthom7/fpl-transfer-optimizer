@@ -1,0 +1,107 @@
+{
+  "phase": 1,
+  "gate": "OPEN",
+  "run_at": "2026-11-07T21:34:46.527113+00:00",
+  "checks": [
+    {
+      "phase": 1,
+      "check": "6+ historical seasons loaded",
+      "tier": "CRITICAL",
+      "value": 7,
+      "threshold": ">= 6",
+      "note": "2019-20,2020-21,2021-22,2022-23,2023-24,2024-25,2025-26",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 1,
+      "check": "Every scheduled GW present per season (2019/20 remapped)",
+      "tier": "CRITICAL",
+      "value": "8/8 seasons complete",
+      "threshold": "all seasons",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 1,
+      "check": "Rerun ingest = identical row counts + file hashes",
+      "tier": "CRITICAL",
+      "value": "46 files, 0 differ, rows_equal=True",
+      "threshold": "0 differ",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 1,
+      "check": "Raw saved as parquet in data/raw/, rows match manifest",
+      "tier": "CRITICAL",
+      "value": "45 parquet files ok, bad=0, stray_csv=0",
+      "threshold": "0 bad",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 1,
+      "check": "Live API: bootstrap-static, fixtures, element-summary, event live OK",
+      "tier": "CRITICAL",
+      "value": "elements=671 fixtures=380 history=10 live=670",
+      "threshold": "all 4 endpoints return data",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 1,
+      "check": "Rate limit (>=1 s/host) + disk cache in place",
+      "tier": "CRITICAL",
+      "value": "delay_cfg=1.0s two_calls=1.70s cache_hit=True",
+      "threshold": ">= 1.0 s, cache hit",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 1,
+      "check": "Snapshot current GW matches live FPL site",
+      "tier": "PASS",
+      "value": "snapshot=10 site=10",
+      "threshold": "equal",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 1,
+      "check": "Per-season player counts in plausible range",
+      "tier": "PASS",
+      "value": "min=666 max=865",
+      "threshold": "550-950",
+      "note": "out_of_range={} outliers(|z|>1.5)=[]",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 1,
+      "check": "xG/xA coverage where source has it",
+      "tier": "GOOD",
+      "value": 1.0,
+      "threshold": ">= 0.90",
+      "note": "2022-23=1.000 2023-24=1.000 2024-25=1.000 2025-26=1.000 2026-27=1.000",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 1,
+      "check": "Data source choice justified in DECISIONS.md",
+      "tier": "GOOD",
+      "value": "rows=1 why_len=153",
+      "threshold": "row present, reason > 40 chars",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    }
+  ]
+}

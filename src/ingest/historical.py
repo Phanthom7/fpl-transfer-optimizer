@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 
 from src.config import ALL_SEASONS, LIVE_SEASON, RAW_DIR, VAASTAV_BASE
 from src.ingest.http import FetchError, fetch_bytes
+from src.ingest.gw import normalize_gw
 from src.ingest.io import read_csv_bytes, to_parquet_safe
 
 log = logging.getLogger(__name__)
@@ -44,6 +45,11 @@ def ingest_season(season: str, force: bool = False) -> dict:
             continue
         df, enc = read_csv_bytes(raw)
         df.insert(0, "season", season)
+        # raw columns untouched; add normalised GW alongside
+        if name == "merged_gw":
+            df["gw"] = normalize_gw(season, df["GW"])
+        elif name == "fixtures":
+            df["gw"] = normalize_gw(season, df["event"])
         to_parquet_safe(df, out_dir / f"{name}.parquet")
         manifest["files"][name] = {"rows": len(df), "cols": df.shape[1], "encoding": enc}
         log.info("%s: %s rows=%d enc=%s", season, name, len(df), enc)
