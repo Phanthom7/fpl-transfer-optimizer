@@ -1,7 +1,13 @@
 numpy
-openpyxl
 pandas
-pulp
+pyarrow
 requests
+requests-cache
+lightgbm
 scikit-learn
+scipy
+pulp
 streamlit
+plotly
+python-dotenv
+pytest
