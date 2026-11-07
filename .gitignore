@@ -4,8 +4,6 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 .env
-artifacts/
-streamlit/
 data/raw/*
 data/interim/*
 data/processed/*

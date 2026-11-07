@@ -3,16 +3,14 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import date
-
 import pandas as pd
 
-from src.config import FPL_API_BASE, RAW_DIR
+from src.config import FPL_API_BASE, LIVE_SEASON, RAW_DIR
 from src.ingest.http import FetchError, fetch_bytes
 from src.ingest.io import to_parquet_safe
 
 log = logging.getLogger(__name__)
-OUT = RAW_DIR / "fpl_api"
+OUT = RAW_DIR / "fpl_api" / LIVE_SEASON  # overwritten each run, no dated copies
 
 
 class FPLClient:
@@ -53,8 +51,8 @@ class FPLClient:
             return False
 
 
-def ingest_live_api(client: FPLClient | None = None, element_summaries: bool = False) -> dict | None:
-    """Snapshot live tables to data/raw/fpl_api/<date>/. Returns None if API unreachable."""
+def ingest_live_api(client: FPLClient | None = None) -> dict | None:
+    """Live season tables to data/raw/fpl_api/<season>/. Returns None if API unreachable."""
     client = client or FPLClient()
     try:
         bs = client.bootstrap()
@@ -63,26 +61,17 @@ def ingest_live_api(client: FPLClient | None = None, element_summaries: bool = F
         log.warning("FPL API unreachable, falling back to vaastav mirror: %s", exc)
         return None
 
-    out = OUT / date.today().isoformat()
+    out = OUT
     tables = {
         "elements": pd.DataFrame(bs["elements"]),
         "teams": pd.DataFrame(bs["teams"]),
         "events": pd.DataFrame(bs["events"]),
-        "element_types": pd.DataFrame(bs["element_types"]),
         "fixtures": pd.DataFrame(fx),
     }
-    finished = [e["id"] for e in bs["events"] if e.get("finished")]
-    live_rows = []
-    for gw in finished:
-        for el in client.event_live(gw)["elements"]:
-            live_rows.append({"gw": gw, "element": el["id"], **el["stats"]})
-    tables["event_live"] = pd.DataFrame(live_rows)
-
-    if element_summaries:
-        hist = []
-        for eid in tables["elements"]["id"]:
-            hist.extend(client.element_summary(int(eid)).get("history", []))
-        tables["element_history"] = pd.DataFrame(hist)
+    hist = []
+    for eid in tables["elements"]["id"]:
+        hist.extend(client.element_summary(int(eid)).get("history", []))
+    tables["element_history"] = pd.DataFrame(hist)
 
     summary = {}
     for name, df in tables.items():

@@ -6,8 +6,8 @@ Budget: 2 days x 6+ hrs. Checkpoint after every phase.
 ## Architecture
 
 ```
-vaastav GitHub CSVs (2019-20 .. 2026-27) ─┐
-FPL API (when reachable) ─────────────────┼─> data/raw/*.parquet   (src/ingest)
+vaastav GitHub CSVs (2018-19 .. 2025-26) ─┐
+FPL API (live 2026-27) ───────────────────┼─> data/raw/*.parquet   (src/ingest)
                                           │
                                           v
                  data/interim/player_gw.parquet       (src/clean)  keyed on player `code`, never name
@@ -26,7 +26,7 @@ refresh.py runs the whole chain.
 
 | # | Phase | Must hrs | Stretch hrs | Must-have | Stretch |
 |---|---|---|---|---|---|
-| 0 | Audit + plan | 0.5 | 0 | archive, PLAN, DECISIONS, AUDIT | |
+| 0 | Audit + plan | 0.5 | 0 | audit, PLAN, DECISIONS, AUDIT | |
 | 1 | Ingest | 1.5 | 0.5 | 7 seasons hist + live 2026/27, parquet, cache, idempotent | xG scraping (Understat/FBref) |
 | E | Eval gates | 1.0 | 0 | eval suite, scorecards, retro-evals P0/P1, P2 draft | |
 | 2 | Clean | 2.0 | 0 | one player-GW table, cross-season ID map, DGW/BGW, 2019/20 GW fix, status flags, DQ report | |

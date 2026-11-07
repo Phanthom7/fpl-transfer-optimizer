@@ -1,11 +1,11 @@
-"""Historical + live-mirror ingest from vaastav/Fantasy-Premier-League."""
+"""Historical ingest (completed seasons) from vaastav/Fantasy-Premier-League."""
 from __future__ import annotations
 
 import json
 import logging
 from datetime import datetime, timezone
 
-from src.config import ALL_SEASONS, AUX_SEASONS, LIVE_SEASON, RAW_DIR, VAASTAV_BASE
+from src.config import AUX_SEASONS, HIST_SEASONS, RAW_DIR, VAASTAV_BASE
 from src.ingest.http import FetchError, fetch_bytes
 from src.ingest.gw import normalize_gw
 from src.ingest.io import read_csv_bytes, to_parquet_safe
@@ -18,17 +18,14 @@ FILES = {
     "players_raw": ("players_raw.csv", True),
     "fixtures": ("fixtures.csv", True),
     "teams": ("teams.csv", True),
-    "understat_player": ("understat/understat_player.csv", False),
 }
-LIVE_TTL_S = 6 * 3600
 OUT = RAW_DIR / "vaastav"
 
 
 def ingest_season(season: str, force: bool = False, only: list[str] | None = None) -> dict:
-    live = season == LIVE_SEASON
     out_dir = OUT / season
     manifest_path = out_dir / "_manifest.json"
-    if manifest_path.exists() and not force and not live:
+    if manifest_path.exists() and not force:
         log.info("%s: already ingested, skipping", season)
         return json.loads(manifest_path.read_text())
 
@@ -39,7 +36,7 @@ def ingest_season(season: str, force: bool = False, only: list[str] | None = Non
             continue
         url = f"{VAASTAV_BASE}/{season}/{rel}"
         try:
-            raw = fetch_bytes(url, ttl_s=LIVE_TTL_S if live else None)
+            raw = fetch_bytes(url)
         except FetchError as exc:
             if required:
                 raise
@@ -61,18 +58,10 @@ def ingest_season(season: str, force: bool = False, only: list[str] | None = Non
     return manifest
 
 
-def ingest_all(seasons=ALL_SEASONS, force: bool = False) -> list[dict]:
+def ingest_all(seasons=HIST_SEASONS, force: bool = False) -> list[dict]:
     return [ingest_season(s, force=force) for s in seasons]
 
 
 def ingest_aux(force: bool = False) -> None:
     for s in AUX_SEASONS:
         ingest_season(s, force=force, only=["players_raw"])
-
-
-def ingest_master_team_list(force: bool = False) -> None:
-    path = OUT / "master_team_list.parquet"
-    if path.exists() and not force:
-        return
-    df, _ = read_csv_bytes(fetch_bytes(f"{VAASTAV_BASE}/master_team_list.csv", ttl_s=7 * 86400))
-    to_parquet_safe(df, path)

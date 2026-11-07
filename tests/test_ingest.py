@@ -91,17 +91,8 @@ def test_season_ingest_idempotent(fake_vaastav):
     m2 = historical.ingest_season("2020-21")
     assert len(calls) == n  # second run: no fetches
     assert m1["files"] == m2["files"]
-    assert "understat_player" not in m1["files"]  # optional file skipped cleanly
     df = pd.read_parquet(out / "2020-21" / "merged_gw.parquet")
     assert df["name"][0] == "Ødegaard" and (df["season"] == "2020-21").all()
-
-
-def test_live_season_always_refreshes(fake_vaastav):
-    calls, _ = fake_vaastav
-    historical.ingest_season(historical.LIVE_SEASON)
-    n = len(calls)
-    historical.ingest_season(historical.LIVE_SEASON)
-    assert len(calls) == 2 * n
 
 
 def test_force_redownloads(fake_vaastav):

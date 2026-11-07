@@ -1,8 +1,6 @@
 """Data quality report for the player-GW table."""
 from __future__ import annotations
 
-import json
-
 import pandas as pd
 
 KEY = ["player_id", "season", "gw", "fixture"]
@@ -42,6 +40,5 @@ def to_markdown(r: dict) -> str:
 
 def write(df: pd.DataFrame, out_dir) -> dict:
     r = report(df)
-    (out_dir / "dq_report.json").write_text(json.dumps(r, indent=2, default=str))
     (out_dir / "dq_report.md").write_text(to_markdown(r))
     return r
