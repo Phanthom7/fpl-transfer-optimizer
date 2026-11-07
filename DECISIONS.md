@@ -13,3 +13,12 @@ Assumption log. Newest at bottom.
 | 7 | 2026-11-07 | 0 | Model: LightGBM per horizon; DL only if beats GBM on test | Tabular data, small budget |
 | 8 | 2026-11-07 | 0 | Storage: parquet (pyarrow) | Fast, typed, UTF-8 safe |
 | 9 | 2026-11-07 | 0 | Current GW = 10 (2026-27), per user. Team ID deferred to model testing | User input |
+| 10 | 2026-11-07 | 1 | Raw files per season: merged_gw, players_raw, fixtures, teams, understat_player (optional, season-level, 2019-20..2024-25 only) | All available from one source; understat gives pre-2022 xG at season level |
+| 11 | 2026-11-07 | 1 | Encoding: try utf-8-sig, cp1252, latin-1; then NFC-normalise. Store strings as parquet `string` | 2019-20 understat is cp1252; NFC stops visually identical names differing in bytes |
+| 12 | 2026-11-07 | 1 | Historical seasons are immutable once ingested (manifest present = skip). Live season re-fetched with 6 h cache TTL. `--force` overrides | Idempotent reruns, no needless traffic |
+| 13 | 2026-11-07 | 1 | HTTP: 1 req/s per host, disk cache, 3 retries with backoff, stale cache used if network fails | Politeness + offline reruns |
+| 14 | 2026-11-07 | 1 | vaastav 2026-27 mirror lags (GW1-6 only). Created personal env "fpl-transfer-optimizer" allowing fantasy.premierleague.com; API is primary for live season | Needed GW7-9 |
+| 15 | 2026-11-07 | 1 | FPL API has no robots.txt (URL serves HTML app). Public read-only endpoints, 1 req/s, cached | ToS: personal, non-commercial use |
+| 16 | 2026-11-07 | 1 | GW10 is in progress (not finished). Only finished GWs used for features/training. Next decision GW = 11 | Partial GW stats would leak/understate |
+| 17 | 2026-11-07 | 1 | Understat/FBref scraping not done: hosts blocked and ToS restrictive. xG = FPL `expected_goals` (2022-23+) + vaastav understat season totals (2019-20..2024-25) | Avoid scraping; good enough coverage |
+| 18 | 2026-11-07 | 1 | Prior-league stats for new signings: no reachable, ToS-safe source. Cold start uses priors (position x price x team) only. Stretch | Data unavailable |
