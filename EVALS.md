@@ -43,29 +43,29 @@ Contract: `data/interim/player_gw.parquet`, one row per (player_id, season, gw, 
 | Points per (season, element, GW) reconcile to raw (exact duplicate raw rows dropped; live = finished GWs) | CRITICAL | 100% |
 | Returning players (same `code` in consecutive seasons) share one player_id | PASS | >= 98% |
 | Same, stretch target | GOOD | >= 99.5% |
-| role + tenure columns leak-free: truncate-and-recompute 200 random rows (target row outcome wiped) *(added, pending approval)* | CRITICAL | 200/200 |
-| role, role_season, status_detail valid labels; status_detail consistent with player_status *(added, pending approval)* | PASS | 0 bad |
-| Mean points starter > substitute > benchwarmer, every season *(added, pending approval)* | GOOD | strict order |
+| role + tenure columns leak-free: truncate-and-recompute 200 random rows (target row outcome wiped) *(added, approved)* | CRITICAL | 200/200 |
+| role, role_season, status_detail valid labels; status_detail consistent with player_status *(added, approved)* | PASS | 0 bad |
+| Mean points starter > substitute > benchwarmer, every season *(added, approved)* | GOOD | strict order |
 | 10 known players spot-checked: Salah, Rice (mover), Haaland (new), Havertz (mover), Palmer (mover), Ødegaard (accent), B. Fernandes, Son (raw name order flips), Mitrović (gap season + promoted), Gyökeres (new, accent) | GOOD | 10/10 |
 
-## Phases 3 to 6: PROPOSED (tests written at start of each phase, after approval)
+## Phases 3 to 6 (Phase 3 approved; 4 to 6 proposed, tests written at start of each phase)
 
-### Phase 3: Features
+### Phase 3: Features (`tests/evals/test_phase3_features.py`) APPROVED
 
 | check | tier | threshold |
 |---|---|---|
-| Leakage: recompute features for 200 random (player, GW) with all data >= GW removed; identical | CRITICAL | 100% equal |
-| Target GW stats never in features (column audit vs same-row raw) | CRITICAL | 0 leaked cols |
-| Rolling 3/5/10 values match hand calc on 20 sampled players | CRITICAL | 100% |
-| Cold-start rows (games_played_in_PL < 3) have prior-filled features | PASS | 100% non-null |
-| games_played_in_PL monotone non-decreasing per player | PASS | 100% |
-| Rolling-5 points Spearman with next-GW points (sanity) | GOOD | >= 0.30 |
+| Leakage: 4 cutoffs x 50 player-GWs; rebuild with later rows dropped, GW g outcomes wiped, results hidden; every FEATURE identical | CRITICAL | 200/200 |
+| No same-GW outcome stats in features: no outcome/target names in FEATURES; no feature with abs(spearman) > 0.95 vs y_1 or same-GW minutes | CRITICAL | 0 |
+| Rolling 3/5/10 points + minutes match hand calc for 20 players | CRITICAL | 100% |
+| Cold-start rows (games_played_in_PL < 3) have COLD_CORE non-null, seasons 2020-21 on (2019-20 is warm-up: no prior season) | PASS | 100% |
+| games_played_in_PL monotone non-decreasing per player | PASS | 0 decreases |
+| Rolling-5 points Spearman with next-GW points | GOOD | >= 0.30 |
 
 ### Phase 4: Model
 
 | check | tier | threshold |
 |---|---|---|
-| Season split: train 2019-20..2023-24, val 2024-25, test 2025-26, no overlap | CRITICAL | 0 overlap |
+| Season split: train 2020-21..2023-24 (2019-20 = feature warm-up), val 2024-25, test 2025-26, no overlap | CRITICAL | 0 overlap |
 | LightGBM 1 GW MAE on test beats rolling-avg baseline | CRITICAL | lower |
 | Live predictions: every available player, 3 horizons, no NaN, confidence flag | CRITICAL | 100% |
 | LightGBM Spearman on test vs FPL xP baseline | PASS | >= baseline - 0.02 |

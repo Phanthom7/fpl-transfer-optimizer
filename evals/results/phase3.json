@@ -1,0 +1,67 @@
+{
+  "phase": 3,
+  "gate": "OPEN",
+  "run_at": "2026-11-08T01:45:51.811441+00:00",
+  "checks": [
+    {
+      "phase": 3,
+      "check": "Leakage: features for 200 player-GWs identical when all data from that GW on is removed",
+      "tier": "CRITICAL",
+      "value": "200/200",
+      "threshold": "200/200",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 3,
+      "check": "No same-GW outcome stats in features (names + |spearman| > 0.95 with y_1 / same-GW minutes)",
+      "tier": "CRITICAL",
+      "value": 0,
+      "threshold": "0",
+      "note": "[] max|rho| y=0.696 min=0.768",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 3,
+      "check": "Rolling 3/5/10 (points, minutes) match hand calc for 20 players",
+      "tier": "CRITICAL",
+      "value": "9618/9618 values",
+      "threshold": "100%",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 3,
+      "check": "Cold-start rows (games_played_in_PL < 3) have prior-filled features (2020-21 on)",
+      "tier": "PASS",
+      "value": "42338 rows, nulls={'prior_ppm': 0, 'prior_mpm': 0, 'pts_r5_blend': 0, 'mins_r5_blend': 0}",
+      "threshold": "100% non-null",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 3,
+      "check": "games_played_in_PL monotone non-decreasing per player",
+      "tier": "PASS",
+      "value": "0 decreases",
+      "threshold": "0",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    },
+    {
+      "phase": 3,
+      "check": "Rolling-5 points Spearman with next-GW points",
+      "tier": "GOOD",
+      "value": 0.6556,
+      "threshold": ">= 0.30",
+      "note": "",
+      "ok": true,
+      "status": "PASS"
+    }
+  ]
+}
