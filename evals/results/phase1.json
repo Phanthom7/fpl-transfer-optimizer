@@ -1,7 +1,7 @@
 {
   "phase": 1,
-  "gate": "OPEN",
-  "run_at": "2026-11-07T22:08:58.487800+00:00",
+  "gate": "BLOCKED",
+  "run_at": "2026-11-08T00:00:38.741894+00:00",
   "checks": [
     {
       "phase": 1,
@@ -27,21 +27,21 @@
       "phase": 1,
       "check": "Rerun ingest = identical row counts + file hashes",
       "tier": "CRITICAL",
-      "value": "47 files, 0 differ, rows_equal=True",
-      "threshold": "0 differ",
-      "note": "",
-      "ok": true,
-      "status": "PASS"
+      "value": null,
+      "threshold": null,
+      "note": "/usr/local/lib/python3.13/pathlib/_local.py:537: FileNotFoundError",
+      "ok": null,
+      "status": "FAIL"
     },
     {
       "phase": 1,
       "check": "Raw saved as parquet in data/raw/, rows match manifest",
       "tier": "CRITICAL",
-      "value": "45 parquet files ok, bad=0, stray_csv=0",
-      "threshold": "0 bad",
-      "note": "",
-      "ok": true,
-      "status": "PASS"
+      "value": null,
+      "threshold": null,
+      "note": "/usr/local/lib/python3.13/pathlib/_local.py:537: FileNotFoundError",
+      "ok": null,
+      "status": "FAIL"
     },
     {
       "phase": 1,
@@ -57,7 +57,7 @@
       "phase": 1,
       "check": "Rate limit (>=1 s/host) + disk cache in place",
       "tier": "CRITICAL",
-      "value": "delay_cfg=1.0s two_calls=1.64s cache_hit=True",
+      "value": "delay_cfg=1.0s two_calls=1.66s cache_hit=True",
       "threshold": ">= 1.0 s, cache hit",
       "note": "",
       "ok": true,
@@ -97,7 +97,7 @@
       "phase": 1,
       "check": "Data source choice justified in DECISIONS.md",
       "tier": "GOOD",
-      "value": "rows=1 why_len=153",
+      "value": "rows=2 why_len=153",
       "threshold": "row present, reason > 40 chars",
       "note": "",
       "ok": true,

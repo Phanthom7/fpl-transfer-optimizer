@@ -1,7 +1,7 @@
 {
   "phase": 0,
-  "gate": "OPEN",
-  "run_at": "2026-11-07T22:08:58.486519+00:00",
+  "gate": "BLOCKED",
+  "run_at": "2026-11-08T00:00:38.741121+00:00",
   "checks": [
     {
       "phase": 0,
@@ -17,11 +17,11 @@
       "phase": 0,
       "check": "Zero deletions vs pre-rebuild repo (archive moves only)",
       "tier": "CRITICAL",
-      "value": "deleted=0 lost_blobs=0",
+      "value": "deleted=19 lost_blobs=19",
       "threshold": "0",
-      "note": "[] []",
-      "ok": true,
-      "status": "PASS"
+      "note": "['D\\tapp.py', 'D\\tcleaned_merged_seasons.csv', 'D\\tdf.ipynb', 'D\\tdocs/README.original.md', 'D\\tfeature_engineering.py', 'D\\tfill_data_v2.py', 'D\\tfpl.ipynb', 'D\\tfpl_2024:25.csv', 'D\\tfpl_cleaned_ml.csv', 'D\\tfpl_engine.py', 'D\\tfpl_predictions_v2.csv', 'D\\tfpl_predictions_v3.csv', 'D\\tfpl_test.csv', 'D\\tgenerate_predictions.py', 'D\\tlasso_feature_analysis.py', 'D\\tml_pipeline.py', 'D\\tserve_app.py', 'D\\tteam2026.py', 'D\\ttrain_model.py'] ['fpl_predictions_v3.csv', 'ml_pipeline.py', 'team2026.py', 'app.py', 'lasso_feature_analysis.py', 'fpl_cleaned_ml.csv', 'cleaned_merged_seasons.csv', 'df.ipynb', 'train_model.py', 'docs/README.original.md', 'fpl_predictions_v2.csv', 'fpl_2024:25.csv', 'fpl_engine.py', 'feature_engineering.py', 'fpl.ipynb', 'serve_app.py', 'generate_predictions.py', 'fpl_test.csv', 'fill_data_v2.py']",
+      "ok": false,
+      "status": "FAIL"
     },
     {
       "phase": 0,
