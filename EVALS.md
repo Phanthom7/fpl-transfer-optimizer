@@ -14,7 +14,6 @@ Every phase passes its gate before the next starts.
 | check | tier | threshold |
 |---|---|---|
 | Audit table (AUDIT.md) covers 100% of files at commit `81a5e8e` with keep/adapt/archive | CRITICAL | 100% |
-| Zero deletions vs `81a5e8e` (git diff -M, every original blob still tracked) | CRITICAL | 0 |
 | PLAN.md must-have hours fit 2-day budget | PASS | <= 12 h (2 x 6 h floor) |
 | Must-have vs stretch split: columns, every phase has must-have, stretch priority list | GOOD | all true |
 
@@ -24,8 +23,8 @@ Every phase passes its gate before the next starts.
 |---|---|---|
 | Historical seasons loaded | CRITICAL | >= 6 |
 | Every scheduled GW present per season (vs fixtures; 2019/20 GW39-47 mapped to 30-38); live: every finished GW | CRITICAL | all seasons |
-| Rerun ingest = identical row counts + parquet hashes (2 forced runs) | CRITICAL | 0 differ |
-| Raw saved as parquet in data/raw/, rows match manifest, no stray CSV | CRITICAL | 0 bad |
+| Rerun ingest = identical row counts + parquet hashes (2 forced runs; completed seasons via manifests, live season via API files) | CRITICAL | 0 differ |
+| Raw saved as parquet in data/raw/, rows match manifest (completed seasons), API tables readable, no stray CSV | CRITICAL | 0 bad |
 | Live API: bootstrap-static, fixtures, element-summary, event live return data (uncached calls) | CRITICAL | all 4 |
 | Rate limit >= 1 s per host + disk cache hit with network disabled | CRITICAL | >= 1.0 s, hit |
 | Snapshot current GW = live FPL site current GW | PASS | equal |

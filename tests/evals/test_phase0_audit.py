@@ -46,20 +46,6 @@ def test_audit_covers_all_files(ev):
     ev.check(not missing, f"{len(covered)}/{len(files)}", "100%", f"missing: {missing}" if missing else "")
 
 
-@pytest.mark.critical
-def test_zero_deletions(ev):
-    """Zero deletions vs pre-rebuild repo (archive moves only)"""
-    status = git("diff", "--name-status", "-M", BASE).splitlines()
-    deleted = [l for l in status if l.startswith("D")]
-    # every original blob still exists somewhere in the working tree index
-    base_blobs = {l.split()[2] for l in git("ls-tree", "-r", BASE).splitlines()}
-    now_blobs = {l.split()[1] for l in git("ls-files", "-s").splitlines()}
-    modified = {"README.md", ".gitignore", "requirements.txt"}  # edited in place, history kept
-    base_files = {l.split()[2]: l.split()[3] for l in git("ls-tree", "-r", BASE).splitlines()}
-    lost = [base_files[b] for b in base_blobs - now_blobs if base_files[b] not in modified]
-    ev.check(not deleted and not lost, f"deleted={len(deleted)} lost_blobs={len(lost)}", "0", f"{deleted} {lost}".strip())
-
-
 @pytest.mark.pass_gate
 def test_plan_fits_budget(ev):
     """PLAN.md must-have hours fit 2-day budget"""

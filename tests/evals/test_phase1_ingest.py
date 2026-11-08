@@ -62,11 +62,11 @@ def test_rerun_identical(ev):
     ingest_live_api()
     api = latest_api_dir()
     h1, a1 = hashes(VAASTAV), hashes(api)
-    m1 = {s: json.loads((VAASTAV / s / "_manifest.json").read_text())["files"] for s in config.ALL_SEASONS}
+    m1 = {s: json.loads((VAASTAV / s / "_manifest.json").read_text())["files"] for s in config.HIST_SEASONS}
     ingest_all(force=True)
     ingest_live_api()
     h2, a2 = hashes(VAASTAV), hashes(api)
-    m2 = {s: json.loads((VAASTAV / s / "_manifest.json").read_text())["files"] for s in config.ALL_SEASONS}
+    m2 = {s: json.loads((VAASTAV / s / "_manifest.json").read_text())["files"] for s in config.HIST_SEASONS}
     diff = [k for k in set(h1) | set(h2) if h1.get(k) != h2.get(k)] + [k for k in set(a1) | set(a2) if a1.get(k) != a2.get(k)]
     ev.check(not diff and m1 == m2, f"{len(h1) + len(a1)} files, {len(diff)} differ, rows_equal={m1 == m2}", "0 differ", ",".join(diff))
 
@@ -76,7 +76,7 @@ def test_raw_is_parquet(ev):
     """Raw saved as parquet in data/raw/, rows match manifest"""
     bad = []
     n = 0
-    for s in config.ALL_SEASONS:
+    for s in config.HIST_SEASONS:
         for name, meta in json.loads((VAASTAV / s / "_manifest.json").read_text())["files"].items():
             p = VAASTAV / s / f"{name}.parquet"
             n += 1
