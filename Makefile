@@ -1,7 +1,7 @@
 PY ?= python
 PHASE ?=
 
-.PHONY: test evals ingest
+.PHONY: test evals ingest data
 
 test:
 	$(PY) -m pytest -q tests --ignore=tests/evals
@@ -15,3 +15,8 @@ endif
 
 ingest:
 	$(PY) -m src.ingest.run
+
+data:
+	$(PY) -m src.ingest.run
+	$(PY) -m src.clean.run
+	$(PY) -m src.features.run
